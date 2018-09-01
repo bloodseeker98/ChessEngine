@@ -1,4 +1,3 @@
-
 public class Rating {
 	static int pawnBoard[][]={//attribute to http://chessprogramming.wikispaces.com/Simplified+evaluation+function
 			{ 0,  0,  0,  0,  0,  0,  0,  0},
@@ -79,35 +78,24 @@ public class Rating {
 		return -(counter+depth*50);
 	}
 	public static int rateAttack() {
-		int counter = 0;
-		int tempPositionC = alphaBetaChess.kingPositionC;
+		int counter=0;
+		int tempPositionC=alphaBetaChess.kingPositionC;
 		for (int i=0;i<64;i++) {
 			switch (alphaBetaChess.chessBoard[i/8][i%8]) {
-				case "P": alphaBetaChess.kingPositionC = i;
-							if(!alphaBetaChess.kingSafe())
-								counter-=64;
-					break;
-				case "R": alphaBetaChess.kingPositionC = i;
-					if(!alphaBetaChess.kingSafe())
-						counter-=500;
-					break;
-				case "K": alphaBetaChess.kingPositionC = i;
-					if(!alphaBetaChess.kingSafe())
-						counter-=300;
-					break;
-				case "B": alphaBetaChess.kingPositionC = i;
-					if(!alphaBetaChess.kingSafe())
-						counter-=300;
-					break;
-				case "Q": alphaBetaChess.kingPositionC = i;
-					if(!alphaBetaChess.kingSafe())
-						counter-=900;
-					break;
+				case "P": {alphaBetaChess.kingPositionC=i; if (!alphaBetaChess.kingSafe()) {counter-=64;}}
+				break;
+				case "R": {alphaBetaChess.kingPositionC=i; if (!alphaBetaChess.kingSafe()) {counter-=500;}}
+				break;
+				case "K": {alphaBetaChess.kingPositionC=i; if (!alphaBetaChess.kingSafe()) {counter-=300;}}
+				break;
+				case "B": {alphaBetaChess.kingPositionC=i; if (!alphaBetaChess.kingSafe()) {counter-=300;}}
+				break;
+				case "Q": {alphaBetaChess.kingPositionC=i; if (!alphaBetaChess.kingSafe()) {counter-=900;}}
+				break;
 			}
 		}
 		alphaBetaChess.kingPositionC=tempPositionC;
-		if(!alphaBetaChess.kingSafe())
-			counter-=200;
+		if (!alphaBetaChess.kingSafe()) {counter-=200;}
 		return counter/2;
 	}
 	public static int rateMaterial() {

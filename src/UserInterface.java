@@ -1,34 +1,31 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
-public class UserInterface extends JPanel implements MouseListener, MouseMotionListener {
+import javax.swing.*;
+public class UserInterface extends JPanel implements MouseListener, MouseMotionListener{
 	static int mouseX, mouseY, newMouseX, newMouseY;
-	static int squareSize = 64;
-
+	static int squareSize=64;
 	@Override
-	protected void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		this.setBackground(new Color(120, 100, 45));
-//		this.addMouseListener(this);
-//		this.addMouseMotionListener(this);
+		this.setBackground(Color.yellow);
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 		this.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				squareSize=(int)(Math.min(getHeight(), getWidth()-200))/8;
 			}
 		});
-		for (int i = 0; i < 64; i += 2) {
-			g.setColor(new Color(255, 200, 100));
-			g.fillRect((i % 8 + (i / 8) % 2) * squareSize, (i / 8) * squareSize, squareSize, squareSize);
-			g.setColor(new Color(150, 50, 30));
-			g.fillRect(((i + 1) % 8 - ((i + 1) / 8) % 2) * squareSize, ((i + 1) / 8) * squareSize, squareSize, squareSize);
+		for (int i=0;i<64;i+=2) {
+			g.setColor(new Color(255,200,100));
+			g.fillRect((i%8+(i/8)%2)*squareSize, (i/8)*squareSize, squareSize, squareSize);
+			g.setColor(new Color(150,50,30));
+			g.fillRect(((i+1)%8-((i+1)/8)%2)*squareSize, ((i+1)/8)*squareSize, squareSize, squareSize);
 		}
 		Image chessPiecesImage;
-		chessPiecesImage = new ImageIcon("ChessPiecesHD.png").getImage();
-
-		for (int i = 0; i < 64; i++) {
-			int j = -1, k = -1;
+		chessPiecesImage=new ImageIcon("ChessPiecesHD.png").getImage();
+		for (int i=0;i<64;i++) {
+			int j=-1,k=-1;
 			switch (alphaBetaChess.chessBoard[i / 8][i % 8]) {
 				case "P":
 					j = 5;
@@ -82,43 +79,43 @@ public class UserInterface extends JPanel implements MouseListener, MouseMotionL
 			if (j != -1 && k != -1) {
 				g.drawImage(chessPiecesImage, (i % 8) * squareSize, (i / 8) * squareSize, (i % 8 + 1) * squareSize, (i / 8 + 1) * squareSize, j * chessPiecesImage.getWidth(this)/6, k * chessPiecesImage.getHeight(this)/2, (j + 1) * chessPiecesImage.getWidth(this)/6, (k + 1) * chessPiecesImage.getHeight(this)/2, this);
 			}
+
 		}
-		repaint();
-//		g.setColor(Color.black);
-//		g.fillRect(x, y,500/8,500/8);
+        /*g.setColor(Color.BLUE);
+        g.fillRect(x-20, y-20, 40, 40);
+        g.setColor(new Color(190,81,215));
+        g.fillRect(40, 20, 80, 50);
+        g.drawString("Jonathan", x, y);
+        */
 	}
-
 	@Override
-	public void mouseMoved(MouseEvent e) {
-	}
-
+	public void mouseMoved(MouseEvent e) {}
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getX() < 8 * squareSize && e.getY() < 8 * squareSize) {
+		if (e.getX()<8*squareSize &&e.getY()<8*squareSize) {
 			//if inside the board
-			mouseX = e.getX();
-			mouseY = e.getY();
+			mouseX=e.getX();
+			mouseY=e.getY();
 			repaint();
 		}
 	}
-
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getX() < 8 * squareSize && e.getY() < 8 * squareSize) {
+		if (e.getX()<8*squareSize &&e.getY()<8*squareSize) {
 			//if inside the board
-			newMouseX = e.getX();
-			newMouseY = e.getY();
-			if (e.getButton() == MouseEvent.BUTTON1) {
+			newMouseX=e.getX();
+			newMouseY=e.getY();
+			if (e.getButton()==MouseEvent.BUTTON1) {
 				String dragMove;
-				if (newMouseY / squareSize == 0 && mouseY / squareSize == 1 && "P".equals(alphaBetaChess.chessBoard[mouseY / squareSize][mouseX / squareSize])) {
+				if (newMouseY/squareSize==0 && mouseY/squareSize==1 && "P".equals(alphaBetaChess.chessBoard[mouseY/squareSize][mouseX/squareSize])) {
 					//pawn promotion
-					dragMove = "" + mouseX / squareSize + newMouseX / squareSize + alphaBetaChess.chessBoard[newMouseY / squareSize][newMouseX / squareSize] + "QP";
+					dragMove=""+mouseX/squareSize+newMouseX/squareSize+alphaBetaChess.chessBoard[newMouseY/squareSize][newMouseX/squareSize]+"QP";
 				} else {
 					//regular move
-					dragMove = "" + mouseY / squareSize + mouseX / squareSize + newMouseY / squareSize + newMouseX / squareSize + alphaBetaChess.chessBoard[newMouseY / squareSize][newMouseX / squareSize];
+					dragMove=""+mouseY/squareSize+mouseX/squareSize+newMouseY/squareSize+newMouseX/squareSize+alphaBetaChess.chessBoard[newMouseY/squareSize][newMouseX/squareSize];
 				}
-				String userPosibilities = alphaBetaChess.possibleMoves();
-				if (userPosibilities.replaceAll(dragMove, "").length() < userPosibilities.length()) {
+				String userPosibilities=alphaBetaChess.posibleMoves();
+				if (userPosibilities.replaceAll(dragMove, "").length()<userPosibilities.length()) {
 					//if valid move
 					alphaBetaChess.makeMove(dragMove);
 					alphaBetaChess.flipBoard();
@@ -129,20 +126,12 @@ public class UserInterface extends JPanel implements MouseListener, MouseMotionL
 			}
 		}
 	}
-
 	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-
+	public void mouseClicked(MouseEvent e) {}
 	@Override
-	public void mouseDragged(MouseEvent e) {
-	}
-
+	public void mouseDragged(MouseEvent e) {}
 	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
+	public void mouseEntered(MouseEvent e) {}
 	@Override
-	public void mouseExited(MouseEvent e) {
-	}
+	public void mouseExited(MouseEvent e) {}
 }
